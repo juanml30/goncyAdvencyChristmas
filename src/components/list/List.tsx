@@ -1,17 +1,9 @@
- import React from "react";
-/*import "./List.css";
+import React from "react";
+/* import { listaDeRegalosProps } from "../../App";
 
-interface ListProps {
-    list: string[];
-}
-
-export function List(props: ListProps): JSX.Element {
+export function List(listaDeRegalos: string[]): JSX.Element {
     return (
-        <ul>
-            {props.list.map((regalo) => (
-                <li key={regalo}>{regalo}</li>
-            ))}
-        </ul>
+        <h1>asd</h1>
     );
 }
  */

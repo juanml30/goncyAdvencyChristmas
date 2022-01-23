@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./App.css";
-/* import { List } from "./components/list/List"; */
 
 /* const listaDeRegalos = ["Medias", "Caramelos", "Vitel Tone"]; */
 
@@ -19,7 +18,7 @@ function App(): JSX.Element {
     const handleSubmit = (e: FormElement) => {
         e.preventDefault();
         addRegalo(newRegalo);
-        setNewRegalo('')
+        setNewRegalo("");
     };
 
     const addRegalo = (regalo: string) => {
@@ -30,21 +29,43 @@ function App(): JSX.Element {
         setListaDeRegalos(newListaRegalos);
     };
 
+    const deleteRegalo = (i: number) => {
+        const newListaRegalos: listaDeRegalosProps[] = [...listaDeRegalos];
+        if (i >= 0) {
+            newListaRegalos.splice(i, 1);
+            setListaDeRegalos(newListaRegalos);
+        } else if (i === -1) {
+            setListaDeRegalos([]);
+        }
+    };
+
     return (
         <div className="App">
             <div className="container">
                 <h1>Regalos</h1>
                 <form onSubmit={handleSubmit}>
-                    <input onChange={(e) => setNewRegalo(e.target.value)} value={newRegalo} />
+                    <input
+                        onChange={(e) => setNewRegalo(e.target.value)}
+                        value={newRegalo}
+                    />
                     <button>Agregar</button>
                 </form>
                 <ul>
                     {listaDeRegalos.map(
-                        (regalos: listaDeRegalosProps, i: number) => {
-                            return <li key={i}>{regalos.regalo}</li>;
+                        (regalos: listaDeRegalosProps, i: number, any) => {
+                            return (
+                                <li key={i}>
+                                    {regalos.regalo}{" "}
+                                    <button onClick={() => deleteRegalo(i)}>
+                                        x
+                                    </button>
+                                </li>
+                            );
                         }
                     )}
                 </ul>
+                {listaDeRegalos.length === 0 ? <h1>Regala algo raton</h1> : React.Fragment }
+                <button onClick={() => deleteRegalo(-1)}>Borrar Todo</button>
             </div>
         </div>
     );
