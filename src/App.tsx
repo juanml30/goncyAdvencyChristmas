@@ -11,17 +11,34 @@ interface listaDeRegalosProps {
 }
 
 function App(): JSX.Element {
+    const getLocalStorage = () => {
+        console.log("Probando si puedo recuperar los datos");
+        const newVar = localStorage.getItem("datos");
+        if (newVar) {
+            console.log(newVar);
+            const transformNewVar = JSON.parse(newVar);
+            console.log(transformNewVar);
+            return transformNewVar;
+        }
+        return [];
+    };
     const [newRegalo, setNewRegalo] = useState<string>("");
     const [cant, setCant] = useState<number>(1);
-    const [listaDeRegalos, setListaDeRegalos] = useState<listaDeRegalosProps[]>(
-        []
-    );
+    const [listaDeRegalos, setListaDeRegalos] =
+        useState<listaDeRegalosProps[]>(getLocalStorage);
 
     const handleSubmit = (e: FormElement) => {
         e.preventDefault();
         addRegalo(newRegalo, cant);
         setNewRegalo("");
         setCant(1);
+    };
+
+    const setLocalStorage = (lista: listaDeRegalosProps[]) => {
+        console.log(listaDeRegalos);
+        const listaString = JSON.stringify(lista);
+        console.log(listaString);
+        localStorage.setItem("datos", listaString);
     };
 
     function verificarRegalo(regalo: string, cant: number): boolean {
@@ -32,7 +49,7 @@ function App(): JSX.Element {
             listaDeRegalos.forEach((element) => {
                 if (regalo === element.regalo) {
                     resultado = false;
-                    addCant(regalo,cant)
+                    addCant(regalo, cant);
                     return resultado;
                 }
             });
@@ -41,21 +58,24 @@ function App(): JSX.Element {
     }
 
     const addCant = (regalo: string, cant: number) => {
-        const newListaRegalos: listaDeRegalosProps[]  = []
+        const newListaRegalos: listaDeRegalosProps[] = [];
         listaDeRegalos.forEach((element) => {
             if (regalo === element.regalo) {
-                element.cant += cant
+                element.cant += cant;
             }
-            newListaRegalos.push(element)
+            newListaRegalos.push(element);
         });
-        setListaDeRegalos(newListaRegalos)
-    }
+        setListaDeRegalos(newListaRegalos);
+        setLocalStorage(newListaRegalos);
+    };
 
     const addRegalo = (regalo: string, cant: number) => {
         if (verificarRegalo(regalo, cant)) {
             const newListaRegalos: listaDeRegalosProps[] = [...listaDeRegalos];
             newListaRegalos.push({ regalo, cant });
             setListaDeRegalos(newListaRegalos);
+            setLocalStorage(newListaRegalos);
+            getLocalStorage();
         }
     };
 
@@ -64,8 +84,10 @@ function App(): JSX.Element {
         if (i >= 0) {
             newListaRegalos.splice(i, 1);
             setListaDeRegalos(newListaRegalos);
+            setLocalStorage(newListaRegalos);
         } else if (i === -1) {
             setListaDeRegalos([]);
+            setLocalStorage([]);
         }
     };
 
