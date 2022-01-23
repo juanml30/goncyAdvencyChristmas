@@ -7,21 +7,24 @@ type FormElement = React.FormEvent<HTMLFormElement>;
 
 interface listaDeRegalosProps {
     regalo: string;
+    cant: number;
 }
 
 function App(): JSX.Element {
     const [newRegalo, setNewRegalo] = useState<string>("");
+    const [cant, setCant] = useState<number>(1);
     const [listaDeRegalos, setListaDeRegalos] = useState<listaDeRegalosProps[]>(
         []
     );
 
     const handleSubmit = (e: FormElement) => {
         e.preventDefault();
-        addRegalo(newRegalo);
+        addRegalo(newRegalo, cant);
         setNewRegalo("");
+        setCant(1);
     };
 
-    function verificarRegalo(regalo: string): boolean {
+    function verificarRegalo(regalo: string, cant: number): boolean {
         let resultado = true;
         if (regalo === "") {
             resultado = false;
@@ -29,6 +32,7 @@ function App(): JSX.Element {
             listaDeRegalos.forEach((element) => {
                 if (regalo === element.regalo) {
                     resultado = false;
+                    addCant(regalo,cant)
                     return resultado;
                 }
             });
@@ -36,12 +40,21 @@ function App(): JSX.Element {
         return resultado;
     }
 
-    const addRegalo = (regalo: string) => {
-        if (verificarRegalo(regalo)) {
-            const newListaRegalos: listaDeRegalosProps[] = [
-                ...listaDeRegalos,
-                { regalo },
-            ];
+    const addCant = (regalo: string, cant: number) => {
+        const newListaRegalos: listaDeRegalosProps[]  = []
+        listaDeRegalos.forEach((element) => {
+            if (regalo === element.regalo) {
+                element.cant += cant
+            }
+            newListaRegalos.push(element)
+        });
+        setListaDeRegalos(newListaRegalos)
+    }
+
+    const addRegalo = (regalo: string, cant: number) => {
+        if (verificarRegalo(regalo, cant)) {
+            const newListaRegalos: listaDeRegalosProps[] = [...listaDeRegalos];
+            newListaRegalos.push({ regalo, cant });
             setListaDeRegalos(newListaRegalos);
         }
     };
@@ -65,14 +78,23 @@ function App(): JSX.Element {
                         onChange={(e) => setNewRegalo(e.target.value)}
                         value={newRegalo}
                     />
+                    <input
+                        type="number"
+                        name=""
+                        id=""
+                        value={cant}
+                        onChange={(e) => setCant(parseInt(e.target.value))}
+                    />
                     <button>Agregar</button>
                 </form>
                 <ul>
                     {listaDeRegalos.map(
-                        (regalos: listaDeRegalosProps, i: number, any) => {
+                        (regalos: listaDeRegalosProps, i: number) => {
                             return (
                                 <li key={i}>
-                                    {regalos.regalo}{" "}
+                                    {regalos.regalo}
+                                    {" X "}
+                                    {regalos.cant}
                                     <button onClick={() => deleteRegalo(i)}>
                                         x
                                     </button>
