@@ -21,12 +21,29 @@ function App(): JSX.Element {
         setNewRegalo("");
     };
 
+    function verificarRegalo(regalo: string): boolean {
+        let resultado = true;
+        if (regalo === "") {
+            resultado = false;
+        } else if (resultado) {
+            listaDeRegalos.forEach((element) => {
+                if (regalo === element.regalo) {
+                    resultado = false;
+                    return resultado;
+                }
+            });
+        }
+        return resultado;
+    }
+
     const addRegalo = (regalo: string) => {
-        const newListaRegalos: listaDeRegalosProps[] = [
-            ...listaDeRegalos,
-            { regalo },
-        ];
-        setListaDeRegalos(newListaRegalos);
+        if (verificarRegalo(regalo)) {
+            const newListaRegalos: listaDeRegalosProps[] = [
+                ...listaDeRegalos,
+                { regalo },
+            ];
+            setListaDeRegalos(newListaRegalos);
+        }
     };
 
     const deleteRegalo = (i: number) => {
@@ -64,7 +81,11 @@ function App(): JSX.Element {
                         }
                     )}
                 </ul>
-                {listaDeRegalos.length === 0 ? <h1>Regala algo raton</h1> : React.Fragment }
+                {listaDeRegalos.length === 0 ? (
+                    <h1>Regala algo raton</h1>
+                ) : (
+                    React.Fragment
+                )}
                 <button onClick={() => deleteRegalo(-1)}>Borrar Todo</button>
             </div>
         </div>
