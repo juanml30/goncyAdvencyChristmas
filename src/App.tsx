@@ -8,6 +8,7 @@ type FormElement = React.FormEvent<HTMLFormElement>;
 interface listaDeRegalosProps {
     regalo: string;
     cant: number;
+    imgLink: string;
 }
 
 function App(): JSX.Element {
@@ -23,15 +24,17 @@ function App(): JSX.Element {
         return [];
     };
     const [newRegalo, setNewRegalo] = useState<string>("");
+    const [imgLink, setImgLink] = useState<string>("");
     const [cant, setCant] = useState<number>(1);
     const [listaDeRegalos, setListaDeRegalos] =
         useState<listaDeRegalosProps[]>(getLocalStorage);
 
     const handleSubmit = (e: FormElement) => {
         e.preventDefault();
-        addRegalo(newRegalo, cant);
+        addRegalo(newRegalo, cant, imgLink);
         setNewRegalo("");
         setCant(1);
+        setImgLink("");
     };
 
     const setLocalStorage = (lista: listaDeRegalosProps[]) => {
@@ -69,10 +72,10 @@ function App(): JSX.Element {
         setLocalStorage(newListaRegalos);
     };
 
-    const addRegalo = (regalo: string, cant: number) => {
+    const addRegalo = (regalo: string, cant: number, imgLink: string) => {
         if (verificarRegalo(regalo, cant)) {
             const newListaRegalos: listaDeRegalosProps[] = [...listaDeRegalos];
-            newListaRegalos.push({ regalo, cant });
+            newListaRegalos.push({ regalo, cant, imgLink });
             setListaDeRegalos(newListaRegalos);
             setLocalStorage(newListaRegalos);
             getLocalStorage();
@@ -99,6 +102,12 @@ function App(): JSX.Element {
                     <input
                         onChange={(e) => setNewRegalo(e.target.value)}
                         value={newRegalo}
+                        placeholder="Regalo"
+                    />
+                    <input
+                        onChange={(e) => setImgLink(e.target.value)}
+                        value={imgLink}
+                        placeholder="Imagen"
                     />
                     <input
                         type="number"
@@ -114,6 +123,11 @@ function App(): JSX.Element {
                         (regalos: listaDeRegalosProps, i: number) => {
                             return (
                                 <li key={i}>
+                                    <img
+                                        src={regalos.imgLink}
+                                        alt=""
+                                        width={20}
+                                    />
                                     {regalos.regalo}
                                     {" X "}
                                     {regalos.cant}
